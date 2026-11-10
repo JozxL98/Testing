@@ -1,0 +1,456 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Quehaceres de la Casa</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: una columna; cada cuarto o zona es una banda de color (azules y violetas) con sus tareas debajo. */
+:root {
+  --bg: #eef0fb;
+  --surface: #ffffff;
+  --ink: #161a3d;
+  --muted: #5d6390;
+  --line: #d9dcf1;
+  --c-sky: #5eb0ff;
+  --c-blue: #2f5fe0;
+  --c-indigo: #4a3fc9;
+  --c-violet: #7a3fe0;
+  --c-lavender: #c3adff;
+  --on-sky: #0f1538;
+  --on-blue: #ffffff;
+  --on-indigo: #ffffff;
+  --on-violet: #ffffff;
+  --on-lavender: #0f1538;
+  --focus: #7a3fe0;
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c0e26;
+    --surface: #161a3e;
+    --ink: #eceefb;
+    --muted: #a0a6d2;
+    --line: #272c5c;
+    --focus: #c3adff;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c0e26;
+  --surface: #161a3e;
+  --ink: #eceefb;
+  --muted: #a0a6d2;
+  --line: #272c5c;
+  --focus: #c3adff;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.4;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+.wrap { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.top { display: flex; flex-direction: column; gap: 12px; }
+.eyebrow { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+h1 {
+  margin: 0; font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(38px, 10vw, 56px); line-height: 1; letter-spacing: -.02em; text-wrap: balance;
+}
+.prog { display: flex; flex-direction: column; gap: 6px; }
+.bar { height: 10px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--c-violet); border-radius: 99px; transition: width .25s ease; }
+:root[data-theme="dark"] .bar i { background: var(--c-lavender); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bar i { background: var(--c-lavender); } }
+.progtxt { margin: 0; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { border: 2px solid var(--ink); background: transparent; border-radius: 8px; padding: 8px 14px; font-size: 14px; font-weight: 600; }
+.btn:hover { background: var(--ink); color: var(--bg); }
+.btn.danger { border-color: var(--c-violet); background: var(--c-violet); color: #fff; }
+.hint {
+  display: flex; align-items: flex-start; gap: 10px; background: var(--surface); border: 1px dashed var(--muted);
+  border-radius: 8px; padding: 10px 12px; font-size: 14px; color: var(--muted);
+}
+.hint p { margin: 0; flex: 1; min-width: 0; }
+.hint button { border: 0; background: transparent; font-weight: 600; text-decoration: underline; padding: 0; color: var(--ink); }
+
+#app { display: flex; flex-direction: column; gap: 20px; }
+.sec { --band: var(--c-blue); --on-band: var(--on-blue); background: var(--surface); border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+.sec[data-c="sky"] { --band: var(--c-sky); --on-band: var(--on-sky); }
+.sec[data-c="indigo"] { --band: var(--c-indigo); --on-band: var(--on-indigo); }
+.sec[data-c="violet"] { --band: var(--c-violet); --on-band: var(--on-violet); }
+.sec[data-c="lavender"] { --band: var(--c-lavender); --on-band: var(--on-lavender); }
+
+.sechead { display: flex; align-items: stretch; background: var(--band); color: var(--on-band); }
+.head { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; text-align: left; background: transparent; border: 0; color: inherit; padding: 12px 8px 12px 16px; }
+.head h2 {
+  margin: 0; flex: 1; min-width: 0; font-family: var(--font-display); font-weight: 800;
+  font-size: 26px; line-height: 1.05; letter-spacing: -.01em; text-wrap: balance; overflow-wrap: anywhere;
+}
+.count { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; border: 2px solid currentColor; border-radius: 99px; padding: 1px 9px; }
+.chev { width: 14px; height: 14px; border-right: 3px solid currentColor; border-bottom: 3px solid currentColor; transform: rotate(45deg); transition: transform .2s; margin-bottom: 4px; flex: none; }
+.sec.closed .chev { transform: rotate(-45deg); margin-bottom: 0; }
+.delsec { background: transparent; border: 0; color: inherit; padding: 0 16px 0 8px; font-size: 13px; font-weight: 600; opacity: .8; white-space: nowrap; }
+.delsec:hover { opacity: 1; text-decoration: underline; }
+.delsec.confirm { text-decoration: underline; opacity: 1; }
+.body { display: block; }
+.sec.closed .body { display: none; }
+
+.items { list-style: none; margin: 0; padding: 4px 0; }
+.item { display: flex; align-items: center; border-bottom: 1px solid var(--line); }
+.item:last-child { border-bottom: 0; }
+.row { flex: 1; min-width: 0; display: flex; align-items: center; gap: 14px; padding: 12px 8px 12px 16px; cursor: pointer; position: relative; }
+.row input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.box { flex: none; width: 26px; height: 26px; border: 2.5px solid var(--band); border-radius: 50%; position: relative; background: transparent; transition: background .15s; }
+.sec[data-c="sky"] .box, .sec[data-c="lavender"] .box { border-color: var(--ink); }
+.row input:checked + .box { background: var(--band); }
+.sec[data-c="sky"] .row input:checked + .box, .sec[data-c="lavender"] .row input:checked + .box { border-color: var(--ink); }
+.row input:checked + .box::after {
+  content: ""; position: absolute; left: 7px; top: 2px; width: 7px; height: 13px;
+  border-right: 3px solid var(--on-band); border-bottom: 3px solid var(--on-band); transform: rotate(40deg);
+}
+.row input:focus-visible + .box { outline: 3px solid var(--focus); outline-offset: 2px; }
+.txt { flex: 1; min-width: 0; font-size: 17px; overflow-wrap: anywhere; }
+.row input:checked ~ .txt { text-decoration: line-through; color: var(--muted); }
+.x { flex: none; width: 44px; height: 44px; border: 0; background: transparent; color: var(--muted); font-size: 22px; line-height: 1; border-radius: 8px; }
+.x:hover { color: var(--c-violet); }
+:root[data-theme="dark"] .x:hover { color: var(--c-lavender); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .x:hover { color: var(--c-lavender); } }
+.empty { margin: 0; padding: 14px 16px; color: var(--muted); font-size: 15px; }
+
+.addform { display: flex; gap: 8px; padding: 10px 12px 12px 16px; border-top: 1px solid var(--line); }
+.addform input[type="text"], .newsec input[type="text"] {
+  flex: 1; min-width: 0; background: var(--bg); border: 2px solid var(--line); border-radius: 8px; padding: 10px 12px;
+}
+.addform input[type="text"]:focus, .newsec input[type="text"]:focus { border-color: var(--ink); outline: none; }
+.addform button { flex: none; border: 0; border-radius: 8px; padding: 0 16px; font-weight: 600; background: var(--band); color: var(--on-band); }
+
+.newsec { display: flex; flex-direction: column; gap: 12px; background: var(--surface); border: 2px dashed var(--line); border-radius: 10px; padding: 14px 16px; }
+.newsec h3 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 20px; }
+.newsec .line { display: flex; gap: 8px; }
+.swatches { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; border: 0; margin: 0; padding: 0; min-width: 0; }
+.swatches legend { font-size: 13px; font-weight: 600; color: var(--muted); padding: 0; margin-bottom: 6px; }
+.sw { position: relative; }
+.sw input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.sw span { display: block; width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent; }
+.sw input:checked + span { border-color: var(--ink); box-shadow: inset 0 0 0 3px var(--surface); }
+.sw input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+.s-sky { background: var(--c-sky); }
+.s-blue { background: var(--c-blue); }
+.s-indigo { background: var(--c-indigo); }
+.s-violet { background: var(--c-violet); }
+.s-lavender { background: var(--c-lavender); }
+.newsec .go { border: 2px solid var(--ink); background: var(--ink); color: var(--bg); border-radius: 8px; padding: 0 16px; font-weight: 600; }
+
+.status { margin: 0; background: var(--surface); border: 2px solid var(--c-violet); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-weight: 500; }
+.row input:disabled ~ .txt { cursor: default; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">Hogar</p>
+    <h1>Quehaceres de la casa</h1>
+    <div class="prog">
+      <div class="bar"><i id="barfill"></i></div>
+      <p class="progtxt" id="progtxt"></p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="reset" type="button">Empezar de nuevo</button>
+      <button class="btn" id="clear-all" type="button">Vaciar todo</button>
+    </div>
+    <p class="status" id="status" role="status" aria-live="polite" hidden></p>
+    <div class="hint" id="hint">
+      <p>Esta lista es compartida: lo que marque o agregue cualquier persona aparece al instante para todos. «Empezar de nuevo» desmarca todo sin borrar nada, ideal para cada semana.</p>
+      <button type="button" id="hint-close">Entendido</button>
+    </div>
+  </header>
+
+  <main id="app"></main>
+
+  <form class="newsec" id="newsec" autocomplete="off">
+    <h3>Nueva zona</h3>
+    <div class="line">
+      <input type="text" id="newsec-name" placeholder="Ej. Garaje, Mascotas, Patio" maxlength="40" aria-label="Nombre de la zona">
+      <button class="go" type="submit">Crear</button>
+    </div>
+    <fieldset class="swatches">
+      <legend>Color</legend>
+      <label class="sw"><input type="radio" name="color" value="blue" checked aria-label="Azul"><span class="s-blue"></span></label>
+      <label class="sw"><input type="radio" name="color" value="sky" aria-label="Celeste"><span class="s-sky"></span></label>
+      <label class="sw"><input type="radio" name="color" value="indigo" aria-label="Índigo"><span class="s-indigo"></span></label>
+      <label class="sw"><input type="radio" name="color" value="violet" aria-label="Violeta"><span class="s-violet"></span></label>
+      <label class="sw"><input type="radio" name="color" value="lavender" aria-label="Lavanda"><span class="s-lavender"></span></label>
+    </fieldset>
+  </form>
+</div>
+
+<script>
+(function () {
+  var UIKEY = "quehaceres-casa-ui-v1";
+  var db = null;
+  var zones = [], tasks = [];
+  var gotZones = false, gotTasks = false;
+  var timedOut = false;
+  var readOnly = false;
+  var pendingDel = null, pendingAll = false;
+  var drafts = {};
+  var ui = { closed: {}, hintOff: false };
+
+  try {
+    var raw = localStorage.getItem(UIKEY);
+    var p = raw ? JSON.parse(raw) : null;
+    if (p && typeof p === "object") ui = { closed: p.closed || {}, hintOff: !!p.hintOff };
+  } catch (e) {}
+  function saveUi() { try { localStorage.setItem(UIKEY, JSON.stringify(ui)); } catch (e) {} }
+
+  var app = document.getElementById("app");
+  var $fill = document.getElementById("barfill");
+  var $prog = document.getElementById("progtxt");
+  var $hint = document.getElementById("hint");
+  var $status = document.getElementById("status");
+  var $clearAll = document.getElementById("clear-all");
+  var $reset = document.getElementById("reset");
+  var $newsec = document.getElementById("newsec");
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function setStatus(msg) { $status.textContent = msg || ""; $status.hidden = !msg; }
+
+  function onWriteError(e) {
+    if (e && e.code === "invalid_argument") {
+      readOnly = true;
+      setStatus("Solo puedes ver esta lista. Pide permiso de colaborador a quien te la compartió para poder marcar y agregar tareas.");
+    } else if (e && e.code === "quota_exceeded") {
+      setStatus("La lista llegó a su límite de tareas. Borra algunas para agregar más.");
+    } else {
+      setStatus("No se pudo guardar el cambio. Revisa tu conexión e intenta de nuevo.");
+    }
+    render();
+  }
+  function guard(promise) { return promise.then(function () { setStatus(""); }, onWriteError); }
+
+  function sortedZones() {
+    return zones.slice().sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+  }
+  function zoneTasks(zid) {
+    var list = tasks.filter(function (t) { return t.zone === zid; })
+      .sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+    return list.filter(function (t) { return !t.done; }).concat(list.filter(function (t) { return t.done; }));
+  }
+
+  function render() {
+    var active = document.activeElement;
+    var activeId = active && active.id && app.contains(active) ? active.id : null;
+    var selStart = null;
+    try { if (activeId && active.selectionStart != null) selStart = active.selectionStart; } catch (e) {}
+
+    var loading = !(gotZones && gotTasks);
+    var total = 0, done = 0;
+    var html = "";
+
+    if (loading) {
+      html = '<p class="empty" style="background:var(--surface);border-radius:10px;border:1px solid var(--line)">' +
+        (timedOut ? "Todavía no se puede conectar con la lista compartida. Sigue intentando; revisa tu conexión." : "Cargando la lista compartida…") + "</p>";
+    } else if (!zones.length) {
+      html = '<p class="empty" style="background:var(--surface);border-radius:10px;border:1px solid var(--line)">Todavía no hay zonas. Crea la primera abajo, por ejemplo «Baño».</p>';
+    } else {
+      html = sortedZones().map(function (z) {
+        var list = zoneTasks(z.id);
+        var d = list.filter(function (t) { return t.done; }).length;
+        total += list.length; done += d;
+        var closed = !!ui.closed[z.id];
+        var color = z.color || "blue";
+        var items = list.map(function (t) {
+          return '<li class="item"><label class="row"><input type="checkbox" id="i-' + esc(t.id) + '" data-id="' + esc(t.id) + '"' + (t.done ? " checked" : "") + (readOnly ? " disabled" : "") + '><span class="box" aria-hidden="true"></span><span class="txt">' + esc(t.t) + '</span></label>' +
+            (readOnly ? "" : '<button type="button" class="x" data-act="del-item" data-id="' + esc(t.id) + '" aria-label="Quitar ' + esc(t.t) + '">×</button>') + '</li>';
+        }).join("");
+        var confirming = pendingDel === z.id;
+        return '<section class="sec' + (closed ? " closed" : "") + '" data-c="' + esc(color) + '">' +
+          '<div class="sechead">' +
+            '<button type="button" class="head" data-act="collapse" data-zone="' + esc(z.id) + '" aria-expanded="' + (!closed) + '">' +
+              '<h2>' + esc(z.name) + '</h2><span class="count">' + d + '/' + list.length + '</span><span class="chev" aria-hidden="true"></span>' +
+            '</button>' +
+            (readOnly ? "" : '<button type="button" class="delsec' + (confirming ? " confirm" : "") + '" data-act="del-zone" data-zone="' + esc(z.id) + '">' + (confirming ? "¿Borrar?" : "Borrar") + '</button>') +
+          '</div>' +
+          '<div class="body">' +
+            (list.length ? '<ul class="items">' + items + '</ul>' : '<p class="empty">No hay tareas aquí todavía.</p>') +
+            (readOnly ? "" : '<form class="addform" data-zone="' + esc(z.id) + '" autocomplete="off">' +
+              '<input type="text" id="add-' + esc(z.id) + '" maxlength="80" placeholder="Agregar tarea en ' + esc(z.name) + '" aria-label="Agregar tarea en ' + esc(z.name) + '">' +
+              '<button type="submit">Agregar</button></form>') +
+          '</div></section>';
+      }).join("");
+    }
+    app.innerHTML = html;
+
+    // Conserva lo que alguien estaba escribiendo cuando llega un cambio de otra persona.
+    Array.prototype.forEach.call(app.querySelectorAll(".addform input[type=text]"), function (inp) {
+      if (drafts[inp.id]) inp.value = drafts[inp.id];
+    });
+    if (activeId) {
+      var again = document.getElementById(activeId);
+      if (again) {
+        again.focus();
+        try { if (selStart != null && again.setSelectionRange) again.setSelectionRange(selStart, selStart); } catch (e) {}
+      }
+    }
+
+    var pct = total ? Math.round(done / total * 100) : 0;
+    $fill.style.width = pct + "%";
+    $prog.textContent = loading ? "Cargando…" : (total ? done + " de " + total + " tareas hechas" : "No hay tareas todavía");
+    $hint.hidden = !!ui.hintOff;
+    $clearAll.textContent = pendingAll ? "¿Seguro? Toca otra vez" : "Vaciar todo";
+    $clearAll.className = "btn" + (pendingAll ? " danger" : "");
+    $reset.hidden = readOnly; $clearAll.hidden = readOnly; $newsec.hidden = readOnly;
+  }
+
+  function resetPending() { pendingDel = null; pendingAll = false; }
+
+  app.addEventListener("input", function (e) {
+    if (e.target.matches && e.target.matches(".addform input[type=text]")) drafts[e.target.id] = e.target.value;
+  });
+
+  app.addEventListener("change", function (e) {
+    var t = e.target;
+    if (!db || t.type !== "checkbox") return;
+    resetPending();
+    guard(db.doc("tasks/" + t.getAttribute("data-id")).update({ done: t.checked }));
+  });
+
+  app.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-act]");
+    if (!b || !db) return;
+    var act = b.getAttribute("data-act");
+    var zid = b.getAttribute("data-zone");
+    if (act === "collapse") {
+      ui.closed[zid] = !ui.closed[zid]; saveUi(); resetPending(); render();
+    } else if (act === "del-item") {
+      resetPending();
+      guard(db.doc("tasks/" + b.getAttribute("data-id")).delete());
+    } else if (act === "del-zone") {
+      if (pendingDel === zid) {
+        pendingDel = null;
+        var ids = tasks.filter(function (t) { return t.zone === zid; }).map(function (t) { return t.id; });
+        guard(ids.reduce(function (chain, id) {
+          return chain.then(function () { return db.doc("tasks/" + id).delete(); });
+        }, Promise.resolve()).then(function () { return db.doc("zones/" + zid).delete(); }));
+      } else { pendingDel = zid; pendingAll = false; render(); }
+    }
+  });
+
+  app.addEventListener("submit", function (e) {
+    if (!e.target.classList.contains("addform")) return;
+    e.preventDefault();
+    if (!db) return;
+    var zid = e.target.getAttribute("data-zone");
+    var input = e.target.querySelector("input");
+    var v = input.value.trim();
+    if (!v) { input.focus(); return; }
+    input.value = ""; delete drafts[input.id];
+    resetPending();
+    guard(db.collection("tasks").add({ zone: zid, t: v, done: false, order: Date.now() }));
+  });
+
+  $newsec.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!db) return;
+    var input = document.getElementById("newsec-name");
+    var v = input.value.trim();
+    if (!v) { input.focus(); return; }
+    var color = (document.querySelector('input[name="color"]:checked') || {}).value || "blue";
+    var maxOrder = zones.reduce(function (m, z) { return Math.max(m, z.order || 0); }, 0);
+    input.value = "";
+    resetPending();
+    guard(db.collection("zones").add({ name: v, color: color, order: maxOrder + 1 }));
+  });
+
+  $reset.addEventListener("click", function () {
+    if (!db) return;
+    resetPending();
+    var done = tasks.filter(function (t) { return t.done; });
+    guard(done.reduce(function (chain, t) {
+      return chain.then(function () { return db.doc("tasks/" + t.id).update({ done: false }); });
+    }, Promise.resolve()));
+  });
+
+  $clearAll.addEventListener("click", function () {
+    if (!db) return;
+    if (pendingAll) {
+      pendingAll = false;
+      var all = tasks.slice();
+      guard(all.reduce(function (chain, t) {
+        return chain.then(function () { return db.doc("tasks/" + t.id).delete(); });
+      }, Promise.resolve()));
+    } else { pendingAll = true; pendingDel = null; render(); }
+  });
+
+  document.getElementById("hint-close").addEventListener("click", function () {
+    ui.hintOff = true; saveUi(); render();
+  });
+
+  render();
+
+  var timer = setTimeout(function () { timedOut = true; render(); }, 10000);
+  function loaded() {
+    if (gotZones && gotTasks) { clearTimeout(timer); timedOut = false; }
+  }
+  function listenError(e) {
+    clearTimeout(timer);
+    setStatus(e && e.code === "revoked"
+      ? "Se perdió el acceso a esta lista. Vuelve a abrir el enlace."
+      : "No se pudo leer la lista compartida. Recarga la página para intentar de nuevo.");
+  }
+
+  if (!window.claude || !window.claude.use) {
+    setStatus("Esta lista compartida solo funciona al abrirla desde Claude con tu sesión iniciada.");
+    return;
+  }
+
+  window.claude.use("db").then(function (store) {
+    if (!store) {
+      clearTimeout(timer);
+      setStatus("Esta lista compartida solo funciona al abrirla desde Claude con tu sesión iniciada.");
+      return;
+    }
+    db = store;
+    db.collection("zones").onSnapshot(function (snap) {
+      zones = snap.docs.map(function (d) { var o = d.data() || {}; o.id = d.id; return o; });
+      gotZones = true; loaded(); render();
+    }, listenError);
+    db.collection("tasks").onSnapshot(function (snap) {
+      tasks = snap.docs.map(function (d) { var o = d.data() || {}; o.id = d.id; return o; });
+      gotTasks = true; loaded(); render();
+    }, listenError);
+    return window.claude.use("user").then(function (user) {
+      if (!user || typeof user.can !== "function") return;
+      return user.can("data.write").then(function (c) {
+        if (c === false) {
+          readOnly = true;
+          setStatus("Solo puedes ver esta lista. Pide permiso de colaborador a quien te la compartió para poder marcar y agregar tareas.");
+          render();
+        }
+      });
+    });
+  }).catch(function () {
+    clearTimeout(timer);
+    setStatus("Esta lista compartida solo funciona al abrirla desde Claude con tu sesión iniciada.");
+  });
+})();
+</script>
+
+</body></html>
