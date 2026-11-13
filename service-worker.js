@@ -1,7 +1,7 @@
 /* Service worker de Quehaceres de la Casa.
    Guarda la app en el aparato para que abra sin internet.
    Si cambias algún archivo, sube el número de VERSION para que se actualice. */
-var VERSION = "quehaceres-v1";
+var VERSION = "quehaceres-v2";
 var SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./maskable-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", function (event) {
